@@ -1,11 +1,28 @@
-import Escrow from './artifacts/contracts/Escrow.sol/Escrow';
-import {ethers} from 'ethers';
+// When running the script with `npx hardhat run <script>` you'll find the Hardhat
+// Runtime Environment's members available in the global scope.
+const hre = require("hardhat");
 
-const provider = new ethers.providers.Web3Provider(ethereum);
+async function main() {
+  
+  const Escrow = await hre.ethers.getContractFactory("Escrow");
+ 
+  const deposit = ethers.utils.parseEther("1");
+  const [arbiter, beneficiary, depositor] = await hre.ethers.provider.listAccounts()
+  const escrow = await Escrow.deploy(arbiter, beneficiary, {
+    value: deposit
+  });
 
-export default async function deploy(arbiter, beneficiary, value) {
-  await ethereum.request({ method: 'eth_requestAccounts' });
-  const signer = provider.getSigner();
-  const factory = new ethers.ContractFactory(Escrow.abi, Escrow.bytecode, signer);
-  return factory.deploy(arbiter, beneficiary, { value });
+  
+
+  await escrow.deployed();
+
+  console.log("Escrow deployed to:", escrow.address);
 }
+
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

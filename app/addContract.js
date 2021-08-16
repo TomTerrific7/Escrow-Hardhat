@@ -1,6 +1,6 @@
 import {ethers} from 'ethers';
 
-const provider = new ethers.providers.Web3Provider(ethereum);
+const provider = new ethers.providers.JsonRpcProvider(URL);
 
 export default async function addContract(id, contract, arbiter, beneficiary, value) {
   const buttonId = `approve-${id}`;
